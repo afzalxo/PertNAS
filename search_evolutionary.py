@@ -67,13 +67,13 @@ def main():
     parser.add_argument('--note', type=str, default='try', help='note for this run')
     parser.add_argument('--cifar100', action='store_true', default=False, help='search with cifar100 dataset')
     parser.add_argument('--load_path', type=str, default='False', help='Load existing model weights from path')
-    parser.add_argument('--op_cap', type=int, default='7', help='Number of operations to cap per edge')
+    parser.add_argument('--op_cap', type=int, default='1', help='Number of operations to cap per edge')
     parser.add_argument('--fast', action='store_true', default=False, help='eval/train on one batch, for debugging')
     parser.add_argument('--use_wandb', action='store_true', default=False, help='Use W&B?')
-    parser.add_argument('--npop', type=int, default='12', help='Number of models in population')
+    parser.add_argument('--npop', type=int, default='4', help='Number of models in population')
     parser.add_argument('--nodes', type=int, default='4', help='Number of intermediate nodes per cell')
-    parser.add_argument('--cluster', type=str, default='tacc', help='Where to execute?')
-    parser.add_argument('--distributed', action='store_true', default=False, help='Distributed search?')
+    parser.add_argument('--cluster', type=str, default='local', help='Where to execute?')
+    parser.add_argument('--distributed', action='store_true', default=True, help='Distributed search?')
 
     args = parser.parse_args()
     if args.distributed and args.cluster == 'tacc':
