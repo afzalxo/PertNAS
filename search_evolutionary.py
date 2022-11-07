@@ -20,7 +20,7 @@ import pickle
 import random
 import tqdm
 from thop import profile
-from ffcv_cifar10loader import get_ffcv_loaders
+from dataloader.ffcv_cifar10loader import get_ffcv_loaders
 from models.model_search import Network
 from extras.genotypes import PRIMITIVES
 from extras.genotypes import Genotype
