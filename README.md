@@ -6,6 +6,8 @@ Install dependencies using the `requirements.txt` file
 
 `pip install -r requirements.txt`
 
+This repository is build upon works by [FFCV](https://ffcv.io/), [DARTS](https://github.com/quark0/darts), [Progressive DARTS](https://github.com/chenxin061/pdarts), and [DARTS+PT](https://github.com/ruocwang/darts-pt).
+
 Search Evolutionary
 -------------------
 
@@ -45,7 +47,7 @@ For **NASBench-301**, please follow the installation instructions at [their repo
 
 Place the generated cell genotype in `nasbench301/example.py` file in the `genotype_config` variable and run the `example.py` script. We utilize same architecture for both normal and reduction cells. 
 
-The best searched cell using supernet-based search achieves 94.58% and the best searched cell using evolutionary approach achieves 94.71% accuracy. Architectures of best cells are as below
+The best searched cell using supernet-based search achieves 94.58% and the best searched cell using evolutionary approach achieves 94.71% accuracy on NASBench-301. Architectures of best cells are as below
 
 Searched Cells
 --------------
