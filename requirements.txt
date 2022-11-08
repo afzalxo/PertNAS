@@ -1,0 +1,6 @@
+ffcv==0.0.3
+numpy==1.22.4
+thop==0.1.1.post2207130030
+torch==1.12.0
+torchvision==0.13.0
+wandb==0.12.21
