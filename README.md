@@ -1,7 +1,6 @@
 ## Discrete Architectural Perturbations for Neural Architecture Search
 
-Requirements
-------------
+### Requirements
 
 Install dependencies using the `requirements.txt` file
 
