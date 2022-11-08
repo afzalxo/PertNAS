@@ -43,7 +43,7 @@ def main():
     parser = argparse.ArgumentParser("cifar")
     parser.add_argument('--workers', type=int, default=12, help='number of workers to load dataset')
     parser.add_argument('--batch_size', type=int, default=256, help='batch size')
-    parser.add_argument('--learning_rate', type=float, default=0.2, help='init learning rate') #0.025
+    parser.add_argument('--learning_rate', type=float, default=0.2176, help='init learning rate') #0.025
     parser.add_argument('--learning_rate_min', type=float, default=0.001, help='min learning rate') #0.001
     parser.add_argument('--momentum', type=float, default=0.9, help='momentum')
     parser.add_argument('--weight_decay', type=float, default=3e-4, help='weight decay')
