@@ -55,11 +55,11 @@ Supernet-based search:
 
 ![alt text][cell-supernet]
 
-[cell-supernet]: https://github.com/afzalxo/PertNAS/blob/main/result_genotypes/bestcell-supernet.pdf "Searched Cell using Supernet-based Method"
+[cell-supernet]: https://github.com/afzalxo/PertNAS/blob/main/result_genotypes/bestcell-supernet.png "Searched Cell using Supernet-based Method"
 
 Evolutionary search:
 
 ![alt text][cell-evolutionary]
 
-[cell-evolutionary]: https://github.com/afzalxo/PertNAS/blob/main/result_genotypes/bestcell-evol.pdf "Searched Cell using Evolutionary search method"
+[cell-evolutionary]: https://github.com/afzalxo/PertNAS/blob/main/result_genotypes/bestcell-evol.png "Searched Cell using Evolutionary search method"
 
