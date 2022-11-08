@@ -18,13 +18,13 @@ cifar_ffcv
 Step 3 - Searching using a population `npop` of 4 discrete models
 
 ```
-torchrun search_evolutionary.py --seed 1 
-                                 --save ./ 
-                                 --note 'evolutionary' 
-                                 --npop 4 
-                                 --distributed 
-                                 --cluster local 
-                                 --train_path <path to cifar_ffcv directory from step 2>
+torchrun --nnodes=1 --nproc_per_node=4 search_evolutionary.py --seed 1 
+                                                             --save ./ 
+                                                             --note 'evolutionary' 
+                                                             --npop 4 
+                                                             --distributed 
+                                                             --cluster local 
+                                                             --train_path <path to cifar_ffcv directory from step 2>
 ```
 
 The genotype would be generated on the terminal and is also logged in the log directory
