@@ -41,8 +41,8 @@ The results in the paper were produced using `npop=4`, `batch_size=256`, and 4 G
 Evaluation
 ----------
 For CIFAR and ImageNet, evaluation of the searched cells follows the same procedure as DARTS-like works (e.g., [DARTS+PT](https://github.com/ruocwang/darts-pt)).
----
-For **NASBench-301**, please follow the installation instructions at [their github](https://github.com/automl/nasbench301)
+
+For **NASBench-301**, please follow the installation instructions at [their repo](https://github.com/automl/nasbench301)
 
 Place the generated cell genotype in `nasbench301/example.py` file in the `genotype_config` variable and run the `example.py` script. We utilize same architecture for both normal and reduction cells. 
 
@@ -55,11 +55,11 @@ Supernet-based search:
 
 ![alt text][cell-supernet]
 
-[cell-supernet]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Searched Cell using Supernet-based Method"
+[cell-supernet]: https://github.com/afzalxo/PertNAS/blob/main/result_genotypes/bestcell-supernet.pdf "Searched Cell using Supernet-based Method"
 
 Evolutionary search:
 
 ![alt text][cell-evolutionary]
 
-[cell-evolutionary]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Searched Cell using Evolutionary search method"
+[cell-evolutionary]: https://github.com/afzalxo/PertNAS/blob/main/result_genotypes/bestcell-evol.pdf "Searched Cell using Evolutionary search method"
 
