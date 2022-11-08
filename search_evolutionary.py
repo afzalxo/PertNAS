@@ -453,15 +453,6 @@ def update_switches(switches_n, edge, switch_store=None):
     _switches_n[edge].append(100)
     return _switches_n, switch_store
 
-def init_valuation_matrix():
-    exp_disc_ret = []
-    nodes = 4
-    k = sum(1 for i in range(nodes) for n in range(2+i))
-    exp_disc_ret = [[0. for j in range(len(PRIMITIVES))] for i in range(k)]
-    for i in range(k):
-        exp_disc_ret.append([0. for j in range(len(PRIMITIVES))])
-    return exp_disc_ret
-
 def discretize_node(imp, switches_n, _node):
     assert(len(switches_n[0]) == 1)
     _imp_n = imp

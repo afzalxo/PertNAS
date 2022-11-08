@@ -35,7 +35,9 @@ torchrun --nnodes=1 --nproc_per_node=4 search_evolutionary.py --seed 1
                                                              --train_path <path to cifar_ffcv directory from step 2>
 ```
 
-The genotype would be printed on the terminal and is also logged in the log directory
+Use `--distributed` flag even if using a single GPU.
+
+The searched genotype would be printed on the terminal and is also logged in the log directory
 
 The results in the paper were produced using `npop=4`, `batch_size=256`, and 4 GPUs. 
 
