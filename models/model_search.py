@@ -137,3 +137,5 @@ class Network(nn.Module):
         else:
             self.alphas_normal[edge][op] = 1.
 
+    def arch_parameters(self):
+        return self._arch_parameters
