@@ -53,9 +53,7 @@ Searched Cells
 
 Supernet-based search:
 
-![alt text][cell-supernet]
-
-[cell-supernet]: https://github.com/afzalxo/PertNAS/blob/main/result_genotypes/bestcell-supernet.png "Searched Cell using Supernet-based Method"
+<img src="https://github.com/afzalxo/PertNAS/blob/main/result_genotypes/bestcell-supernet.png" width=50%>
 
 Evolutionary search:
 
