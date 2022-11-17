@@ -4,11 +4,11 @@ import time
 import glob
 import numpy as np
 import torch
-import utils
+import extras.utils as utils
 import logging
 import argparse
 import torch.nn as nn
-import extras.genotypes
+import extras.genotypes as genotypes
 import torch.utils
 import torchvision.datasets as dset
 import torch.backends.cudnn as cudnn
@@ -18,7 +18,7 @@ from models.model_eval import NetworkCIFAR as Network
 
 
 parser = argparse.ArgumentParser("cifar")
-parser.add_argument('--workers', type=int, default=4, help='number of workers')
+parser.add_argument('--workers', type=int, default=12, help='number of workers')
 parser.add_argument('--batch_size', type=int, default=128, help='batch size')
 parser.add_argument('--learning_rate', type=float, default=0.025, help='init learning rate')
 parser.add_argument('--momentum', type=float, default=0.9, help='momentum')

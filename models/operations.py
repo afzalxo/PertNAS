@@ -14,6 +14,7 @@ OPS = {
   'sep_conv_7x7' : lambda C, stride, affine, edge: SepConv(C, C, 7, stride, 3, edge, affine=affine),
   'dil_conv_3x3' : lambda C, stride, affine, edge: DilConv(C, C, 3, stride, 2, 2, edge, affine=affine),
   'dil_conv_5x5' : lambda C, stride, affine, edge: DilConv(C, C, 5, stride, 4, 2, edge, affine=affine),
+  'dil_conv_7x7' : lambda C, stride, affine, edge: DilConv(C, C, 7, stride, 6, 2, edge, affine=affine),
   'conv_7x1_1x7' : lambda C, stride, affine, edge: nn.Sequential(
     nn.ReLU(inplace=False),
     nn.Conv2d(C, C, (1,7), stride=(1, stride), padding=(0, 3), bias=False),

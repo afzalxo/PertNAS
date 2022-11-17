@@ -89,7 +89,7 @@ def main():
     args.global_rank = global_rank
     args.local_rank = local_rank
     args.ip = ip
-
+    args.val_batch_size = int(args.batch_size * 1.0)
     args.save = '{}search-{}-{}'.format(args.save, args.note, time.strftime("%Y%m%d-%H%M%S"))
     if args.distributed: 
         setup_distributed(args.global_rank, args.local_rank, ip, str(33182), args.cluster, args.world_size)
@@ -97,13 +97,13 @@ def main():
     if global_rank == 0:
         utils.create_exp_dir(args.save, scripts_to_save=glob.glob('*.py'))
     if args.use_wandb:
-        wandb_identity = '<W&B Identity>'
+        wandb_identity = '166a45fa2ad2b2db9ec555119b273a3a9bdacc41'
         import wandb
-        os.environ["WANDB_API_KEY"] = '<W&B API Key Goes Here>'
-        os.environ["WANDB_ENTITY"]='<W&B Identity>'
+        os.environ["WANDB_API_KEY"] = wandb_identity
+        os.environ["WANDB_ENTITY"]='europa1610'
         os.environ["WANDB_PROJECT"]='PertNAS-FFCV'
         wandb_dir = args.save
-        wandb_con = wandb.init(project='PertNAS-FFCV', entity=wandb_identity, dir=wandb_dir, name=args.note + '_' + str(local_rank), group='clustered-search')
+        wandb_con = wandb.init(project='PertNAS-FFCV', entity='europa1610', dir=wandb_dir, name=args.note + '_' + str(local_rank), group='clustered-search')
 
     #Different color schemes for log output from different processes
     color_purple = '\033[1;35;48m'
@@ -144,7 +144,7 @@ def main():
         args.wandb_con = wandb_con
 
     ### FFCV loader here
-    train_queue, valid_queue = get_ffcv_loaders(args.train_path, args.batch_size, 4096, local_rank)
+    train_queue, valid_queue = get_ffcv_loaders(args.train_path, args.batch_size, args.val_batch_size, local_rank)
     criterion = nn.CrossEntropyLoss().to(f'cuda:{local_rank}')
     for n_iter in range(args.npop // world_size):
         start_ep = 0
@@ -184,6 +184,7 @@ def main():
 
         switch_store = None
         while not done_expand_perturb:
+            #_edge = _edges[0]
             _edge = _edges[0]
             _edges.remove(_edge)
             _old_state_dict = model.state_dict()
@@ -205,7 +206,7 @@ def main():
                 network_params.append(v)
             optimizer = torch.optim.SGD(network_params, args.learning_rate/2.5, momentum=args.momentum, weight_decay = args.weight_decay)
             scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, float(_perturb_every), eta_min=args.learning_rate_min)
-            train_x_epochs(_perturb_every, 0, scheduler, train_queue, valid_queue, model, criterion, optimizer, args)
+            train_x_epochs(_perturb_every, 9999, scheduler, train_queue, valid_queue, model, criterion, optimizer, args)
             logging.info('Checking Edge %d, Edges %s', _edge, str(_edges))
             edge_imp_vec = perturb_val(model, criterion, optimizer, network_params, scheduler.get_last_lr()[0], finetune_steps=args.finetune_steps+20, args=args, rank=local_rank, _edge=_edge)
             logging.info('Edge Values %s', str(np.array(edge_imp_vec)))
@@ -337,6 +338,7 @@ def train_x_epochs(epochs, validation_begin_epoch, scheduler, train_queue, valid
         logging.info('Epoch: %d lr: %f', epoch, lr)
         if args.use_wandb:
             args.wandb_con.log({'Learning Rate': lr}, commit=False)
+        logging.info('GPU Memory Acclocated: %s, Max Alloc %s, Mem Reserved %s, Max Mem Reserved %s', torch.cuda.memory_allocated(), torch.cuda.max_memory_allocated(), torch.cuda.memory_reserved(), torch.cuda.max_memory_reserved())
         train_acc, train_obj = train(train_queue, valid_queue, model, criterion, optimizer, scaler=scaler, args=args)
         scheduler.step()
         logging.info('Train_acc %f', train_acc)
@@ -361,7 +363,7 @@ def perturb_val(model, criterion, optimizer, network_params, lr, finetune_steps=
     acp=time.time()
     _sd_backup = model.state_dict()
     _optim_sd_backup = optimizer.state_dict()
-    _, v_queue = get_ffcv_loaders(args.train_path, args.batch_size, 4096, rank)
+    t_queue, v_queue = get_ffcv_loaders(args.train_path, args.batch_size, args.val_batch_size, rank)
     acc_before, _ = infer(v_queue, model, criterion, log_off=True, args=args)
     scaler = GradScaler()
     if _edge == None:
@@ -369,7 +371,7 @@ def perturb_val(model, criterion, optimizer, network_params, lr, finetune_steps=
         for edge in range(k):
             for ops in range(len(model.arch_parameters()[0][edge])-include_none):
                 loader_stime = time.time()
-                t_queue, v_queue = get_ffcv_loaders(args.train_path,args.batch_size, 8192, rank)
+                #t_queue, v_queue = get_ffcv_loaders(args.train_path,args.batch_size, args.val_batch_size, rank)
                 model._perturb_binary(edge, ops, remove=True)
 
                 #Fine-tune perturbed arch
@@ -386,7 +388,7 @@ def perturb_val(model, criterion, optimizer, network_params, lr, finetune_steps=
         perturb_acc_diff = [0. for x in range(len(model.arch_parameters()[0][_edge])-include_none)]
         for ops in range(len(model.arch_parameters()[0][_edge])-include_none):
             loader_stime = time.time()
-            t_queue, v_queue = get_ffcv_loaders(args.train_path, args.batch_size, 8192, rank)
+            #t_queue, v_queue = get_ffcv_loaders(args.train_path, args.batch_size, args.val_batch_size, rank)
             model._perturb_binary(_edge, ops, remove=True)
 
             #Fine-tune perturbed arch
@@ -502,7 +504,7 @@ def train(train_queue, valid_queue, model, criterion, optimizer, finetune_steps=
         scaler.step(optimizer)
         scaler.update()
 
-        prec1, prec5 = utils.accuracy(logits, target, topk=(1, 5))
+        prec1, prec5 = utils.accuracy(logits.detach(), target.detach(), topk=(1, 5))
         objs.update(loss.data.item(), n)
         top1.update(prec1.data.item(), n)
         top5.update(prec5.data.item(), n)
@@ -511,6 +513,7 @@ def train(train_queue, valid_queue, model, criterion, optimizer, finetune_steps=
             logging.info('TRAIN Step: %03d Objs: %e R1: %f R5: %f', step, objs.avg, top1.avg, top5.avg)
         if partial and step >= finetune_steps:
             break
+        del loss, logits
 
     return top1.avg, objs.avg
 
@@ -530,7 +533,7 @@ def infer(valid_queue, model, criterion, log_off=False, args=None):
                 logits = model(input)
                 loss = criterion(logits, target)
 
-            prec1, prec5 = utils.accuracy(logits, target, topk=(1, 5))
+            prec1, prec5 = utils.accuracy(logits.detach(), target, topk=(1, 5))
             n = input.size(0)
             objs.update(loss.data.item(), n)
             top1.update(prec1.data.item(), n)
@@ -539,6 +542,7 @@ def infer(valid_queue, model, criterion, log_off=False, args=None):
             if not log_off:
                 if step % args.report_freq == 0:
                     logging.info('valid %03d %e %f %f', step, objs.avg, top1.avg, top5.avg)
+            del loss, logits
 
     return top1.avg, objs.avg
 
@@ -547,7 +551,8 @@ def _init_switches(_op_cap):
     nodes = 4
     k = sum(1 for i in range(nodes) for n in range(2+i))
     for i in range(k):
-        switches.append(sorted(random.sample(range(len(PRIMITIVES)), _op_cap)+[100], reverse=False))
+        #switches.append(sorted(random.sample(range(len(PRIMITIVES)), _op_cap)+[100], reverse=False))
+        switches.append([3])
     return switches
 
 if __name__ == '__main__':
