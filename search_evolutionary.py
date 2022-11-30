@@ -551,8 +551,8 @@ def _init_switches(_op_cap):
     nodes = 4
     k = sum(1 for i in range(nodes) for n in range(2+i))
     for i in range(k):
-        #switches.append(sorted(random.sample(range(len(PRIMITIVES)), _op_cap)+[100], reverse=False))
-        switches.append([3])
+        switches.append(sorted(random.sample(range(len(PRIMITIVES)), _op_cap)+[100], reverse=False))
+        #switches.append([3])
     return switches
 
 if __name__ == '__main__':
